@@ -10,7 +10,45 @@
 https://developer.android.google.cn/guide/topics/ui/declaring-layout.html
  学习文档中关于ConstraintLayout, LinearLayout和TableLayout的相关内容
 
-实验1就不用展示吧 soeasy
+大概阐述一下github的使用吧
+
+#### . 建立android工程目录，比如我的工程Android_Lab
+
+
+
+#### 2.建立Android工程HelloWorld
+
+#### 3.右键Android_Lab，选择**Git Bash Here**，出现一个Git Bash命令行窗口，建立一个本地仓库
+
+```
+git init
+```
+
+#### 4.**添加**远程仓库
+
+```
+git remote add origin “your url”
+```
+
+#### 5.验证是否添加远程仓库成功
+
+```
+git remote -v
+```
+
+#### 6.上传工程代码
+
+```
+git add .
+
+git commit -m "Android_Lab"
+
+git push -u origin master
+```
+
+#### 7.在github上查看结果
+
+用Android 完成实验二
 
 ### 1.利用线性布局实现如下界面：  
 
