@@ -1,0 +1,5 @@
+<resources>
+    <string name="app_name">KangkangNote</string>
+    <string name="pref_night_summary">这是黑夜模式</string>
+
+</resources>
