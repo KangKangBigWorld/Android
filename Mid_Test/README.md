@@ -75,10 +75,10 @@ https://developer.android.google.cn/guide/topics/ui/declaring-layout.html
     public void autoSetMessage(){
         if(openMode == 4){
             if(et.getText().toString().length() == 0){
-                intent.putExtra("mode", -1); //nothing new happens.
+                intent.putExtra("mode", -1); //没有事情发生
             }
             else{
-                intent.putExtra("mode", 0); // new one note;
+                intent.putExtra("mode", 0); // 新建一个笔记
                 intent.putExtra("content", et.getText().toString());
                 intent.putExtra("time", dateToStr());//保存时间
                 intent.putExtra("tag", tag);
@@ -86,7 +86,7 @@ https://developer.android.google.cn/guide/topics/ui/declaring-layout.html
         }
         else {
             if (et.getText().toString().equals(old_content) && !tagChange)
-                intent.putExtra("mode", -1); // edit nothing
+                intent.putExtra("mode", -1); // 不编辑
             else {
                 intent.putExtra("mode", 1); //edit the content
                 intent.putExtra("content", et.getText().toString());
@@ -97,7 +97,7 @@ https://developer.android.google.cn/guide/topics/ui/declaring-layout.html
         }
     }
 
-    public String dateToStr(){
+    public String dateToStr(){//将数据转换成一个时间戳格式的显示出来
         Date date = new Date();
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         return simpleDateFormat.format(date);
@@ -105,6 +105,66 @@ https://developer.android.google.cn/guide/topics/ui/declaring-layout.html
 ```
 
 ![点击并拖拽以移动](data:image/gif;base64,R0lGODlhAQABAPABAP///wAAACH5BAEKAAAALAAAAAABAAEAAAICRAEAOw==)
+
+#### NoteList中显示条目增加时间戳显示：
+
+在`xml`中添加一个用于显示时间戳的TextView<br>
+
+```java
+<TextView
+            android:id="@+id/time"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingLeft="5dip"
+            android:textColor="#000000"
+            />
+```
+
+已知数据库定义中已存在修改时间和创建时间的项：<br>
+
+```
+db.execSQL("CREATE TABLE " + NotePad.Notes.TABLE_NAME + " ("
+                   + NotePad.Notes._ID + " INTEGER PRIMARY KEY,"
+                   + NotePad.Notes.COLUMN_NAME_TITLE + " TEXT,"
+                   + NotePad.Notes.COLUMN_NAME_NOTE + " TEXT,"
+                   + NotePad.Notes.COLUMN_NAME_CREATE_DATE + " INTEGER,"
+                   + NotePad.Notes.COLUMN_NAME_MODIFICATION_DATE + " INTEGER,"
+                   + ");");
+```
+
+使用修改时间为时间戳显示，在NoteList中找到PROJECTION添加一个元素<br>
+
+```java
+private static final String[] PROJECTION = new String[] {
+            NotePad.Notes._ID, // 0
+            NotePad.Notes.COLUMN_NAME_TITLE, // 1
+            NotePad.Notes.COLUMN_NAME_MODIFICATION_DATE,//添加该行
+    };
+```
+
+修改dataColumns,viewIDs添加时间，然后用Cursor从数据库中取出数据<br>
+
+```java
+private String[] dataColumns = { NotePad.Notes.COLUMN_NAME_TITLE ,
+                    NotePad.Notes.COLUMN_NAME_MODIFICATION_DATE
+} ;
+// The view IDs that will display the cursor columns, initialized to the TextView in
+private int[] viewIDs = { android.R.id.text1,R.id.text1_time };
+```
+
+修改时间的显示方式:在NotePadProvider中显示的`insert方法`和NoteEditor中的`updateNote`方法中修改`创建时间`和`修改时间`的格式<br>
+
+```java
+public String dateToStr(){//将数据转换成一个时间戳格式的显示出来
+        Date date = new Date();
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        return simpleDateFormat.format(date);
+    }
+```
+
+```java
+ intent.putExtra("time", dateToStr());//保存时间
+```
 
 ### 2.添加笔记查询功能（根据标题查询）
 
